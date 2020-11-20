@@ -4,32 +4,39 @@ using UnityEngine;
 
 public class Flipper : MonoBehaviour
 {
-    public float moveAngle = -45.0f;
+    // Inspecterで値を変更する
+    public float spring = 40000;
+    public float openAngle = 60; // 開く角度
+    public float closeAngle = 0; // 閉じる角度
     public KeyCode keyCode = KeyCode.A;
-    bool isKeyDown = false;
-    float baseAngle = 0;
-    Rigidbody rb;
+
+    // Hinge Joint
+    private HingeJoint hinjiJoint;
+    // JointSpring
+    private JointSpring jointSpring;
+
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        baseAngle = transform.rotation.eulerAngles.y;
+        hinjiJoint = GetComponent<HingeJoint>();
+        jointSpring = hinjiJoint.spring;
     }
 
     // Update is called once per frame
     void Update()
     {
-        isKeyDown = Input.GetKey(keyCode);
-    }
-    private void FixedUpdate()
-    {
-        if (isKeyDown)
+        if (Input.GetKeyDown(keyCode))
         {
-            rb.MoveRotation(Quaternion.Euler(0, baseAngle + moveAngle, 0));
+            jointSpring.spring = spring;
+            jointSpring.targetPosition = openAngle;
+            hinjiJoint.spring = jointSpring;
         }
-        else
+        if (Input.GetKeyUp(keyCode))
         {
-            rb.MoveRotation(Quaternion.Euler(0, baseAngle, 0));
+            jointSpring.spring = spring;
+            jointSpring.targetPosition = closeAngle;
+            hinjiJoint.spring = jointSpring;
         }
+
     }
 }
