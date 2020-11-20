@@ -21,7 +21,7 @@ public class Bumper : MonoBehaviour
         Rigidbody rigidbody = collision.gameObject.GetComponent<Rigidbody>();
         if (rigidbody != null)
         {
-            rigidbody.AddForce( (collision.transform.position- transform.position)*force,ForceMode.VelocityChange); 
+            rigidbody.AddForce( collision.contacts[0].normal*force,ForceMode.VelocityChange); 
         }
     }
 }
